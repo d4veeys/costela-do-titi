@@ -1,8 +1,5 @@
-// src/components/ProductCard.tsx
 'use client'
-
-import { Product } from '@/lib/data'
-import { formatPrice } from '@/lib/data'
+import { Product, formatPrice, getBadgeText, getBadgeColor } from '@/lib/data'
 import Image from 'next/image'
 
 interface ProductCardProps {
@@ -12,18 +9,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart, onCustomize }: ProductCardProps) {
-  const getBadgeColor = (badge: string) => {
-    const colors = {
-      popular: 'bg-orange-500',
-      discount: 'bg-red-500', 
-      bestseller: 'bg-yellow-500',
-      recommended: 'bg-green-500',
-      premium: 'bg-purple-500',
-      exclusive: 'bg-gray-800'
-    }
-    return colors[badge as keyof typeof colors] || 'bg-gray-500'
-  }
-
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
       {/* Image Container */}
@@ -41,16 +26,18 @@ export function ProductCard({ product, onAddToCart, onCustomize }: ProductCardPr
             🍖
           </div>
         )}
-        
+
         {/* Badges */}
         {product.badges && (
           <div className="absolute top-3 left-3 flex gap-2">
             {product.badges.map(badge => (
-              <span 
+              <span
                 key={badge}
-                className={`${getBadgeColor(badge)} text-white text-xs font-bold px-2 py-1 rounded-full`}
+                className={`
+                  ${getBadgeColor(badge)} text-white text-xs font-bold px-2 py-1 rounded-full
+                `}
               >
-                {badge === 'discount' ? '-20%' : badge}
+                {getBadgeText(badge)}
               </span>
             ))}
           </div>
@@ -80,7 +67,7 @@ export function ProductCard({ product, onAddToCart, onCustomize }: ProductCardPr
         {product.features && (
           <div className="flex gap-2 mb-3">
             {product.features.map(feature => (
-              <span 
+              <span
                 key={feature}
                 className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full"
               >
@@ -96,7 +83,9 @@ export function ProductCard({ product, onAddToCart, onCustomize }: ProductCardPr
             <div className="flex text-yellow-400">
               {'★'.repeat(5)}
             </div>
-            <span className="text-sm text-gray-500">({product.reviews})</span>
+            <span className="text-sm text-gray-500">
+              ({product.reviews})
+            </span>
           </div>
         )}
 

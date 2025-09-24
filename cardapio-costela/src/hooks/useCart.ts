@@ -1,6 +1,4 @@
-// src/hooks/useCart.ts
 'use client'
-
 import { useState, useEffect } from 'react'
 import { Product, Additional, ADDITIONALS, formatPrice } from '@/lib/data'
 
@@ -50,7 +48,7 @@ export function useCart() {
   }, [items, isLoading])
 
   const calculateItemPrice = (
-    basePrice: number, 
+    basePrice: number,
     additionals: string[] = []
   ): number => {
     let total = basePrice
@@ -64,12 +62,12 @@ export function useCart() {
   }
 
   const addItem = (
-    product: Product, 
+    product: Product,
     customizations?: { additionals: string[], notes?: string },
     flavor?: string
   ) => {
     const totalPrice = calculateItemPrice(
-      product.price, 
+      product.price,
       customizations?.additionals
     )
 
@@ -87,7 +85,6 @@ export function useCart() {
     }
 
     setItems(prev => [...prev, cartItem])
-    
     return cartItem.id
   }
 
@@ -101,9 +98,9 @@ export function useCart() {
       return
     }
 
-    setItems(prev => 
-      prev.map(item => 
-        item.id === itemId 
+    setItems(prev =>
+      prev.map(item =>
+        item.id === itemId
           ? { ...item, quantity }
           : item
       )
@@ -125,9 +122,9 @@ export function useCart() {
   const generateWhatsAppMessage = (customerData: any, deliveryMode: string) => {
     const subtotal = getSubtotal()
     const itemsCount = getItemsCount()
-    
+
     let message = `🍖 *NOVO PEDIDO - Costela do Titi*\n\n`
-    
+
     // Informações do cliente
     message += `👤 *Cliente:* ${customerData.name}\n`
     message += `📞 *Telefone:* ${customerData.phone}\n`
@@ -150,29 +147,28 @@ export function useCart() {
       message += `${index + 1}. *${item.name}* (${item.quantity}x)\n`
       
       if (item.flavor) {
-        message += `   🥤 Sabor: ${item.flavor}\n`
+        message += ` 🥤 Sabor: ${item.flavor}\n`
       }
-      
+
       if (item.customizations?.additionals && item.customizations.additionals.length > 0) {
         const additionalNames = item.customizations.additionals
           .map(id => ADDITIONALS.find(a => a.id === id)?.name)
           .filter(name => name)
-        
+
         if (additionalNames.length > 0) {
-          message += `   + ${additionalNames.join(', ')}\n`
+          message += ` + ${additionalNames.join(', ')}\n`
         }
       }
-      
+
       if (item.customizations?.notes) {
-        message += `   💬 "${item.customizations.notes}"\n`
+        message += ` 💬 "${item.customizations.notes}"\n`
       }
-      
-      message += `   💰 ${formatPrice(item.totalPrice * item.quantity)}\n\n`
+
+      message += ` 💰 ${formatPrice(item.totalPrice * item.quantity)}\n\n`
     })
 
     // Total
     message += `💵 *TOTAL: ${formatPrice(subtotal)}*\n`
-    
     if (deliveryMode === 'delivery') {
       message += `🚗 *Taxa de entrega:* A combinar\n`
     }
